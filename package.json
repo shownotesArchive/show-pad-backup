@@ -1,0 +1,19 @@
+{
+  "name": "show-pad-backup",
+  "version": "0.0.1",
+  "author": "luto <m@luto.at>",
+  "description": "",
+  "contributors": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shownotes/show-pad-backup.git"
+  },
+  "dependencies" : {
+    "nconf": "0.6.x",
+    "async": "0.2.x",
+    "log4js": "0.6.x"
+  },
+  "engines": {
+    "node": ">=0.8"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "backup":
+  {
+    "tasks": [ "redis", "docs" ],
+    "destination": "./backup"
+  },
+  "tasks":
+  {
+    "redis":
+    {
+      "dump-path": ""
+    },
+    "showpad":
+    {
+      "host": "",
+      "port": "",
+      "api-key": ""
+    }
+  }
+}
