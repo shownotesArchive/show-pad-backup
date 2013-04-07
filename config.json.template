@@ -1,20 +1,25 @@
 {
   "backup":
   {
-    "tasks": [ "redis", "docs" ],
-    "destination": "./backup"
+    "tasks": [ "docdata", "metadata" ],
+    "destination": "./backup/"
   },
   "tasks":
   {
-    "redis":
+    "metadata":
     {
-      "dump-path": ""
     },
+    "docdata":
+    {
+    }
+  },
+  "shared":
+  {
     "showpad":
     {
-      "host": "",
-      "port": "",
-      "api-key": ""
+      "host": "0.0.0.0",
+      "port": "8080",
+      "apikey": ""
     }
   }
 }

@@ -27,6 +27,7 @@ function loadTasks(cb)
 {
   mainLogger.info("Loading tasks..");
   var loaderLogger = log4js.getLogger("taskLoader");
+  var sharedConfig = nconf.get("shared");
 
   fs.readdir('./tasks',
     function (err, files)
@@ -43,6 +44,7 @@ function loadTasks(cb)
         {
           var task = require('./tasks/' + file);
           var taskname = task.name;
+          var taskconfig = getTaskConfig(taskname);
 
           if(nconf.get("backup:tasks").indexOf(taskname) == -1)
           {
@@ -53,9 +55,10 @@ function loadTasks(cb)
           async.reject(task.requiredConfig,
             function (key, cb)
             {
-              var val = nconf.get("tasks:" + taskname + ":" + key);
-              var exists = (val && val.length != 0);
-              cb(exists);
+              var taskVal = nconf.get("tasks:" + taskname + ":" + key);
+              var sharedVal = nconf.get("shared:" + key);
+              var isValid = isValidConfig(taskVal) || isValidConfig(sharedVal);
+              cb(isValid);
             },
             function (results)
             {
@@ -83,23 +86,29 @@ function loadTasks(cb)
   );
 }
 
+function isValidConfig(val)
+{
+  return (val && val.length != 0);
+}
+
 function executeTasks(cb)
 {
   mainLogger.info("Executing %s tasks..", Object.keys(tasks).length);
   var executeLogger = log4js.getLogger("taskExecutor");
-  var mainDestination = nconf.get("backup:destination") + Date.now();
+  var mainDestination = path.join(nconf.get("backup:destination"), "backup-" + Date.now());
   createDirIfNotExists(mainDestination);
 
   async.eachSeries(Object.keys(tasks),
     function (taskname, cb)
     {
       var task = tasks[taskname];
-      var config = nconf.get("tasks:" + taskname);
+      var config = getTaskConfig(taskname);
       var destination = path.join(mainDestination, taskname);
       var taskLogger = log4js.getLogger(taskname);
 
       createDirIfNotExists(destination);
 
+      executeLogger.info("Executing Task '%s'..", taskname);
       task.execute(config, destination, taskLogger,
         function (err)
         {
@@ -114,8 +123,18 @@ function executeTasks(cb)
     function ()
     {
       executeLogger.info("All tasks executed.");
+      cb();
     }
   )
+}
+
+function getTaskConfig(taskname)
+{
+  var config = nconf.get("tasks:" + taskname);
+  var sharedConfig = nconf.get("shared");
+  for (var attr in sharedConfig)
+    config[attr] = sharedConfig[attr];
+  return config;
 }
 
 function createDirIfNotExists(dir)

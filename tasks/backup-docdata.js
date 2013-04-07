@@ -1,10 +1,10 @@
 
-exports.name = "docs";
+exports.name = "docdata";
 exports.requiredConfig =
   [
-    "host"
-  , "port"
-  , "api-key"
+    "showpad:host"
+  , "showpad:port"
+  , "showpad:apikey"
   ];
 
 exports.execute = function (config, dest, logger, cb)
