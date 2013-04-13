@@ -95,7 +95,7 @@ function executeTasks(cb)
 {
   mainLogger.info("Executing %s tasks..", Object.keys(tasks).length);
   var executeLogger = log4js.getLogger("taskExecutor");
-  var mainDestination = path.join(nconf.get("backup:destination"), "backup-" + Date.now());
+  var mainDestination = path.resolve(nconf.get("backup:destination"), "backup-" + Date.now());
   createDirIfNotExists(mainDestination);
 
   async.eachSeries(Object.keys(tasks),
@@ -139,6 +139,7 @@ function getTaskConfig(taskname)
 
 function createDirIfNotExists(dir)
 {
+  mainLogger.debug("Creating dir:", dir);
   if (!fs.existsSync(dir))
     fs.mkdir(dir);
 }
