@@ -47,7 +47,7 @@ function backupDocs(cb)
             else
             {
               var file = path.join(dest, "bak-" + doc.name + ".json");
-              fs.writeFile(file, JSON.stringify(data),
+              fs.writeFile(file, JSON.stringify(doc),
                 function (err)
                 {
                   if(err)
