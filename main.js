@@ -139,7 +139,8 @@ function getTaskConfig(taskname)
 
 function createDirIfNotExists(dir)
 {
-  mainLogger.debug("Creating dir:", dir);
-  if (!fs.existsSync(dir))
-    fs.mkdir(dir);
+  var exists = fs.existsSync(dir);
+  mainLogger.debug("Creating dir, exists=%s, %s", exists, dir);
+  if (!exists)
+    fs.mkdirSync(dir);
 }
